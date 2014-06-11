@@ -65,13 +65,15 @@ branches.hcursor.downArray.downField("name").focus
 
  branches.as[List[Branch]].toDisjunction.unethical.head
 
-* server
+* juggling
+
+** server
 
 val client = server.runDefault
 client.submit(Json(
   "some" := "example"
 ))
 
-* client
+** client
 
 val client = Client("http://....:10080")
