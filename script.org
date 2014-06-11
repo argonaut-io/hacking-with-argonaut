@@ -1,4 +1,19 @@
+
+                                                 __
+_____ _______  ____   ____   ____ _____   __ ___/  |_
+\__  \\_  __ \/ ___\ /  _ \ /    \\__  \ |  |  \   __\
+ / __ \|  | \/ /_/  >  <_> )   |  \/ __ \|  |  /|  |
+(____  /__|  \___  / \____/|___|  (____  /____/ |__|
+     \/     /_____/             \/     \/
+
+
 * intro with github
+
+** the json data type
+
+val json = Json("name" := "argonaut", "version" := "6")
+json.obj
+json.number
 
 ** zippers
 
@@ -45,7 +60,6 @@ branches.hcursor.downArray.downField("name").focus
 
  implicit def BranchDecodeJson: CodecJson[Branch] =
    casecodec2(Branch.apply, Branch.unapply)("name", "commit")
-
 
  branches.as[List[Branch]]
 
