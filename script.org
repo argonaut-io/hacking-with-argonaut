@@ -1,0 +1,63 @@
+* intro with github
+
+** zippers
+
+val result = github.branches
+:t result
+:t result.unethical
+val branches = result.unethical
+:t branches.spaces2
+branches.spaces2
+branches.cursor.focus
+branches.acursor.focus
+branches.hcursor.focus
+branches.hcursor.downArray.focus
+branches.hcursor.downArray.downField("name").focus
+(branches.hcursor.downArray.downField("name") := "was-codecs".asJson).focus
+(branches.hcursor.downArray.downField("name") := "was-codecs".asJson).undo
+(branches.hcursor.downArray.downField("does-not-exist") := "was-codecs".asJson).undo
+(branches.hcursor.downArray.downField("name") := "was-codecs".asJson).history
+
+** lenses
+
+ (jArrayPL).get(branches)
+ (jArrayPL >=> PLens.listNthPLens(0)).get(branches)
+ (jArrayPL >=> PLens.listNthPLens(0) >=> jObjectPL).get(branches)
+ (jArrayPL >=> PLens.listNthPLens(0) >=> jObjectPL >=> jsonObjectPL("name")).get(branches)
+ (jArrayPL >=> PLens.listNthPLens(0) >=> jObjectPL >=> jsonObjectPL("name")).set(branches, "someething".asJson)
+
+
+** codecs
+
+ :paste
+
+ case class Commit(sha: String, url: String)
+
+ implicit def CommitCodecJson: CodecJson[Commit] = CodecJson(c => Json(
+   "sha" := c.sha,
+   "url" := c.url
+ ), c => for {
+   sha <- (c --\ "sha").as[String]
+   url <- (c --\ "url").as[String]
+ } yield Commit(sha, url))
+
+ case class Branch(name: String, commit: Commit)
+
+ implicit def BranchDecodeJson: CodecJson[Branch] =
+   casecodec2(Branch.apply, Branch.unapply)("name", "commit")
+
+
+ branches.as[List[Branch]]
+
+ branches.as[List[Branch]].toDisjunction.unethical.head
+
+* server
+
+val client = server.runDefault
+client.submit(Json(
+  "some" := "example"
+))
+
+* client
+
+val client = Client("http://....:10080")

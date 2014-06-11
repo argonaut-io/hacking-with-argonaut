@@ -83,7 +83,7 @@ object server {
     run(10080)
 
   def run(port: Int): Client = {
-    unfiltered.jetty.Http.local(port).filter(AsyncPlan).start
+    unfiltered.jetty.Http.apply(port).filter(AsyncPlan).start
     val addr = java.net.InetAddress.getLocalHost.getHostAddress
     Client(s"http://${addr}:${port}")
   }
